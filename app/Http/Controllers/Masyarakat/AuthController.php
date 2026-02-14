@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -37,11 +38,12 @@ class AuthController extends Controller
     // 1. Validasi semua input dari kedua tabel
     $request->validate([
         'name' => 'required|string|max:255|unique:users',
-        'email'    => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
+        'email'    => 'required|string|email|unique:users',
+        'password' => 'required|string|min:8',
         'nik'      => 'required|string|size:16|unique:masyarakats',
         'alamat'   => 'required|string',
         'telp'     => 'required|string|max:13',
+        'role'     => 'required',
     ]);
 
     // 2. Mulai Transaksi Database
@@ -50,7 +52,7 @@ class AuthController extends Controller
     try {
         // 3. Simpan ke tabel Users
         $user = User::create([
-            'name' => $request->username,
+            'name' => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => $request->role, // Default role
@@ -70,13 +72,17 @@ class AuthController extends Controller
         // Opsional: Langsung login setelah daftar
         Auth::login($user);
 
-        return redirect()->route('masyarakat.dashboard')->with('success', 'Registrasi Berhasil!');
+         Alert::toast('PAnda Berhasil Login', 'success')->autoClose(3000);
+        return redirect()->route('masyarakat.dashboard');
 
     } catch (\Exception $e) {
         // 6. Jika ada yang gagal, batalkan semua perubahan
         DB::rollBack();
         
-         return redirect()->route('masyarakat.dashboard');
+         return redirect()->back()
+    ->withErrors($e->getMessage())
+    ->withInput();
+
     }
 }
        

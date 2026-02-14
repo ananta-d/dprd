@@ -66,7 +66,7 @@
                                     <img id="main-avatar" src="{{ asset('storage/' . $user->foto) }}" class="w-28 h-28 rounded-full object-cover mx-auto mb-6 shadow-xl border-4 border-white">
                                 @else
                                     <div id="main-initial" class="w-28 h-28 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-4xl font-bold shadow-xl shadow-blue-100">
-                                        {{ strtoupper(substr($user->nama, 0, 1)) }}
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </div>
                                 @endif
                             </div>
@@ -75,7 +75,7 @@
                             <div class="absolute bottom-6 right-0 w-8 h-8 bg-green-500 border-4 border-white rounded-full shadow-md"></div>
                         </div>
 
-                        <h2 class="text-xl font-bold text-gray-900 leading-tight">{{ $user->nama }}</h2>
+                        <h2 class="text-xl font-bold text-gray-900 leading-tight">{{ $user->name }}</h2>
                         <p class="text-blue-600 text-xs font-bold uppercase tracking-widest mt-1">NIK: {{ $user->nik }}</p>
 
                         <div class="mt-8 pt-8 border-t border-gray-50 space-y-3">
@@ -112,6 +112,7 @@
                         <div class="p-8">
                             <form id="profileForm" action="{{ route('masyarakat.updateProfile') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                
                                 <input type="hidden" name="image_base64" id="image_base64">
 
                                 <div class="space-y-6">

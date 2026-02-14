@@ -5,58 +5,37 @@ namespace App\Http\Controllers\Masyarakat;
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PengaduanController extends Controller
 {
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // Simpan Laporan
-    public function storeLaporan(Request $request) {
-        $path = $request->file('foto') ? $request->file('foto')->store('pengaduan', 'public') : null;
+public function storeLaporan(Request $request)
+{
+    $request->validate([
+        'judul' => 'required|string|max:255',
+        'isi_laporan' => 'required|string',
+        'foto' => 'nullable|image|max:2048',
+    ]);
 
-        Complaint::create([
-            'nik_masyarakat' => session('nik_warga'),
-            'judul' => $request->judul,
-            'isi_laporan' => $request->isi_laporan,
-            'foto' => $path,
-            'status' => 'pending'
-        ]);
+    $path = $request->file('foto')
+            ? $request->file('foto')->store('pengaduan', 'public')
+            : null;
 
-        // Ubah 'pesan' jadi 'success' agar sesuai dengan toast di tampilan yazid
-        return back()->with('success', 'Laporan berhasil terkirim!');
-    }
+    $masyarakat = Auth::user()->masyarakat;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    Complaint::create([
+        'masyarakat_id' => $masyarakat->id,
+        'lokasi_kejadian' => $request->lokasi_kejadian,
+        'judul' => $request->judul,
+        'isi_laporan' => $request->isi_laporan,
+        'foto' => $path,
+        'status' => 'pending',
+    ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    Alert::toast('Pengaduan berhasil dikirim.', 'success')->autoClose(3000);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    return back();
+}
 }
