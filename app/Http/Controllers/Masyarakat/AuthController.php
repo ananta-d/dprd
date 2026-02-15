@@ -84,10 +84,13 @@ class AuthController extends Controller
     ->withInput();
 
     }
-}
-       
+} 
 
-   
+    // Logout
+    public function logout() {
+        session()->forget(['nik_warga', 'nama_warga']);
+        return redirect()->route('masyarakat.index');
+    }
 
     
 }

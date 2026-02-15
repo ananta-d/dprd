@@ -1,12 +1,15 @@
 <?php
 
-// use App\Http\Controllers\ProfileController;
-// use App\Http\Controllers\MasyarakatController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Masyarakat\AuthController;
 use App\Http\Controllers\Masyarakat\PengaduanController;
-use App\Http\Controllers\Masyarakat\DashboardController;
-use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\Masyarakat\DashboardController as MasyarakatDashboardController;
 use App\Http\Controllers\Masyarakat\ProfileController;
+
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+
+use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,10 +27,12 @@ Route::get('/masyarakat/register', [AuthController::class, 'register'])->name('m
 Route::post('/masyarakat/register', [AuthController::class, 'storeRegister'])->name('masyarakat.store_register');
 
 // Fitur Dashboard & Laporan
-Route::get('/masyarakat/dashboard', [DashboardController::class, 'dashboard'])->name('masyarakat.dashboard');
+Route::get('/masyarakat/dashboard', [MasyarakatDashboardController::class, 'dashboard'])->name('masyarakat.dashboard');
 Route::post('/masyarakat/lapor', [PengaduanController::class, 'storeLaporan'])->name('laporan.store');
 
-// --- FITUR TAMBAHAN DARI VERSI YAZID ---
+// riwayat 
+Route::get('riwayat-pengaduan/tanggapan', [RiwayatController::class, 'index'])->name('masyarakat.tanggapan');
+
 // Profile Masyarakat
 Route::get('/masyarakat/profile', [ProfileController::class, 'profile'])->name('masyarakat.profile');
 Route::post('/masyarakat/profile/update', [ProfileController::class, 'updateProfile'])->name('masyarakat.updateProfile');
@@ -41,17 +46,21 @@ Route::get('/masyarakat/logout', [AuthController::class, 'logout'])->name('masya
 | 2. JALUR ADMIN & STAFF (Bawaan Breeze)
 |--------------------------------------------------------------------------
 */
-Route::redirect('/role', '/login')->name('role');
-
-Route::get('/admin/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Fitur Profile Admin (Bawaan Breeze)
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware(['sudahLogin'])->group(function () {
+    Route::get('/login', [SesiController::class, 'index'])->name('login-admin-staff');
+    Route::post('/proses-login', [SesiController::class, 'prosesLogin'])->name('proses.login');
 });
 
-require __DIR__.'/auth.php';
+Route::prefix('admin')->middleware(['isLogin', 'userAkses:admin'])->group(function () {
+    Route::get('/dashbord', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
+
+
+
+
+});
+
+Route::prefix('staff')->middleware(['isLogin', 'userAkses:staff'])->group(function () {
+    Route::get('/dashbord', [StaffDashboradController::class, 'index'])->name('dashboard.staff');
+});
+
+Route::post('/logout', [SesiController::class, 'logout'])->name('logout');

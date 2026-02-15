@@ -190,10 +190,10 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <button
-                                                class="text-blue-600 hover:bg-blue-600 hover:text-white font-black text-[10px] px-3 py-2 bg-blue-50 rounded-lg transition-all uppercase">
+                                            <a href="{{route(''masyarakat.tanggapan'')}}" class="text-blue-600 hover:bg-blue-600 hover:text-white font-black text-[10px] px-3 py-2 bg-blue-50 rounded-lg transition-all uppercase">
                                                 Tanggapan
-                                            </button>
+                                            </a>
+                                            
                                         </td>
                                     </tr>
                                     @empty

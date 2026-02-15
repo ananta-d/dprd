@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-        public function profile() {
+    public function profile() {
         $user = Masyarakat::where('nik', session('nik_warga'))->first();
         return view('masyarakat.profile', compact('user'));
     }
