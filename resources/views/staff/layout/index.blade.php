@@ -25,14 +25,14 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-@include('Admin.components.sidebar')
+@include('staff.components.sidebar')
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    @include('Admin.components.navbar')
+    @include('staff.components.navbar')
     <!-- End Navbar -->
     <div class="container-fluid py-4">
     @yield('content')
-      @include('Admin.components.footer')
+      @include('staff.components.footer')
     </div>
   </main>
   <div class="fixed-plugin">

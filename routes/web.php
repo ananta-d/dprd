@@ -54,13 +54,15 @@ Route::middleware(['sudahLogin'])->group(function () {
 Route::prefix('admin')->middleware(['isLogin', 'userAkses:admin'])->group(function () {
     Route::get('/dashbord', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
-
+    // route bagian2 yang admin disini ya
 
 
 });
 
 Route::prefix('staff')->middleware(['isLogin', 'userAkses:staff'])->group(function () {
-    Route::get('/dashbord', [StaffDashboradController::class, 'index'])->name('dashboard.staff');
+    Route::get('/dashbord', [StaffDashboardController::class, 'index'])->name('dashboard.staff');
+
+    // route bagian2 yang staff disini yaa
 });
 
 Route::post('/logout', [SesiController::class, 'logout'])->name('logout');

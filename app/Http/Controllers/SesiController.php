@@ -28,9 +28,9 @@ class SesiController extends Controller
 
             $user = Auth::user();
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('dashboard.admin');
             } else if ($user->role === 'staff'){
-                return redirect()->route('staff.dashboard');
+                return redirect()->route('dashboard.staff');
             } else {
                 return redirect()->route('welcome');
             }
